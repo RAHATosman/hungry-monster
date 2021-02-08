@@ -1,17 +1,14 @@
 const searchBtn = document.getElementById('search-btn');
-const mealList = document.getElementById('meal');
-const mealDetailsContent = document.querySelector('.meal-details-content');
-const recipeCloseBtn = document.getElementById('recipe-close-btn');
+const mealsList = document.getElementById('meal');
+const mealsDetailsContent = document.querySelector('.meals-details-content');
+const recipesCloseBtn = document.getElementById('recipes-close-btn');
 
-// event listeners
-searchBtn.addEventListener('click', getMealList);
-mealList.addEventListener('click', getMealRecipe);
-recipeCloseBtn.addEventListener('click', () => {
-    mealDetailsContent.parentElement.classList.remove('showRecipe');
+searchBtn.addEventListener('click', getMealsList);
+mealsList.addEventListener('click', getMealsRecipe);
+recipesCloseBtn.addEventListener('click', () => {
+    mealsDetailsContent.parentElement.classList.remove('showRecipe');
 });
-
-
-function getMealList() {
+function getMealsList() {
     let searchInputTxt = document.getElementById('search-input').value.trim();
     fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${searchInputTxt}`)
         .then(response => response.json())
@@ -32,31 +29,27 @@ function getMealList() {
 
                 `;
                 });
-                mealList.classList.remove('notFound');
+                mealsList.classList.remove('notFound');
             } else {
                 html = "Sorry, we didn't find any meal!";
-                mealList.classList.add('notFound');
+                mealsList.classList.add('notFound');
             }
-
-            mealList.innerHTML = html;
+            mealsList.innerHTML = html;
         });
 }
-
-function getMealRecipe(e) {
+function getMealsRecipe(e) {
     e.preventDefault();
     if (e.target.classList.contains('recipe-btn')) {
         let mealItem = e.target.parentElement.parentElement;
         fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${mealItem.dataset.id}`)
             .then(response => response.json())
-            .then(data => mealRecipeModal(data.meals));
+            .then(data => mealsModal(data.meals));
     }
 }
-
-function mealRecipeModal(meal) {
+function mealsModal(meal) {
     meal = meal[0];
     let html = `
-      
-    
+          
     <div class = "meal-img detels-img ">
         <img  src = "${meal.strMealThumb}" alt = "food">
     </div>
@@ -73,10 +66,9 @@ function mealRecipeModal(meal) {
         <h4>${meal.strIngredient9}</h4>
     
     </div>
-
 </div>
      
     `;
-    mealDetailsContent.innerHTML = html;
-    mealDetailsContent.parentElement.classList.add('showRecipe');
+    mealsDetailsContent.innerHTML = html;
+    mealsDetailsContent.parentElement.classList.add('showRecipe');
 }
